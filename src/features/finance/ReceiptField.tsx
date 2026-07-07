@@ -26,70 +26,68 @@ interface Preview {
 }
 
 /**
- * Upload with progress + cancel via a raw XHR against the Supabase Storage
- * object endpoint. Simpler and more reliable than the signed-upload-URL flow
- * (which does not accept custom headers like `x-upsert`).
+ * Upload via the Supabase JS SDK. The SDK's fetch wrapper already knows how
+ * to handle the new-format publishable keys (`sb_publishable_*`) — a hand
+ * rolled XHR that also sets `Authorization: Bearer` was causing the Storage
+ * service to reject the request with a misleading "Bucket not found" error.
+ *
+ * Progress is simulated in coarse steps because the SDK doesn't expose upload
+ * progress events. Cancel triggers via AbortController.
  */
 function uploadWithProgress(
   path: string,
   file: File,
   onProgress: (pct: number) => void,
 ): { promise: Promise<void>; abort: () => void } {
-  let xhr: XMLHttpRequest | null = null;
+  const ctrl = new AbortController();
+  let ticker: ReturnType<typeof setInterval> | null = null;
 
   const promise = (async () => {
-    const { data: sess } = await supabase.auth.getSession();
-    const token = sess.session?.access_token;
-    if (!token) throw new Error("Sessão expirada. Faça login novamente.");
+    // Fake progress so the UI doesn't feel frozen on large files.
+    let pct = 5;
+    onProgress(pct);
+    ticker = setInterval(() => {
+      pct = Math.min(pct + 5, 90);
+      onProgress(pct);
+    }, 250);
 
-    const url = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/finance-receipts/${path
-      .split("/")
-      .map((s) => encodeURIComponent(s))
-      .join("/")}`;
+    try {
+      const { error } = await supabase.storage
+        .from("finance-receipts")
+        .upload(path, file, {
+          contentType: file.type || undefined,
+          cacheControl: "3600",
+          upsert: true,
+        });
 
-    await new Promise<void>((resolve, reject) => {
-      const req = new XMLHttpRequest();
-      xhr = req;
-      req.open("POST", url, true);
-      req.setRequestHeader("Authorization", `Bearer ${token}`);
-      req.setRequestHeader(
-        "apikey",
-        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
-      );
-      if (file.type) req.setRequestHeader("Content-Type", file.type);
-      req.setRequestHeader("x-upsert", "true");
-      req.setRequestHeader("cache-control", "3600");
-      req.upload.onprogress = (e) => {
-        if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
-      };
-      req.onerror = () => reject(new Error("Falha de rede no envio"));
-      req.onabort = () => reject(new DOMException("Upload cancelado", "AbortError"));
-      req.onload = () => {
-        if (req.status >= 200 && req.status < 300) {
-          onProgress(100);
-          resolve();
-        } else {
-          let msg = `Falha ao enviar (${req.status})`;
-          try {
-            const body = JSON.parse(req.responseText);
-            if (body?.message) msg = body.message;
-          } catch {
-            /* ignore */
-          }
-          reject(new Error(msg));
+      if (ctrl.signal.aborted) {
+        throw new DOMException("Upload cancelado", "AbortError");
+      }
+      if (error) {
+        // Map common storage errors to actionable Portuguese messages.
+        const raw = (error as { message?: string }).message ?? "Falha ao enviar comprovante";
+        if (/bucket not found/i.test(raw)) {
+          throw new Error(
+            "Armazenamento indisponível: bucket de comprovantes não encontrado. Contate o suporte.",
+          );
         }
-      };
-      req.send(file);
-    });
+        if (/row-level security|unauthorized|jwt/i.test(raw)) {
+          throw new Error("Sem permissão para anexar comprovante. Verifique seu acesso.");
+        }
+        throw new Error(raw);
+      }
+      onProgress(100);
+    } finally {
+      if (ticker) clearInterval(ticker);
+    }
   })();
 
   return {
     promise,
-    abort: () => {
-      if (xhr) xhr.abort();
-    },
+    abort: () => ctrl.abort(),
   };
 }
+
 
 
 
@@ -158,12 +156,27 @@ export function ReceiptField({ value, onChange, label = "Comprovante" }: Props) 
 
     setUploading(true);
     try {
-      const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      // Path deve casar com o bucket `finance-receipts` e as RLS de
+      // storage.objects. Convenção Supabase: prefixo com o user id para que
+      // políticas baseadas em `auth.uid()::text = (storage.foldername(name))[1]`
+      // funcionem. Também sanitiza o nome do arquivo — Storage rejeita chaves
+      // com caracteres fora do conjunto seguro (espaços, acentos, `#`, `?`, `%`,
+      // `\`, etc.) devolvendo erros pouco claros como "Bucket not found".
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData.user?.id;
+      if (!userId) {
+        throw new Error("Sessão expirada. Faça login novamente para anexar comprovantes.");
+      }
+
+      const extMatch = file.name.match(/\.([a-zA-Z0-9]{1,8})$/);
+      const ext = (extMatch?.[1] ?? "bin").toLowerCase();
       const uid =
         typeof crypto !== "undefined" && "randomUUID" in crypto
-          ? crypto.randomUUID().slice(0, 8)
-          : Math.random().toString(36).slice(2, 10);
-      const path = `receipts/${Date.now()}-${uid}-${safe}`;
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      // Somente ASCII seguro: letras, números, hífen, ponto, underscore, barra.
+      const path = `${userId}/receipts/${Date.now()}-${uid}.${ext}`;
+
       const { promise, abort } = uploadWithProgress(path, file, setProgress);
       abortRef.current = abort;
       await promise;
