@@ -433,10 +433,22 @@ export function OrderDetailSheet({ orderId, open, onOpenChange }: Props) {
 
               <TabsContent value="attachments" className="mt-4 space-y-3">
                 <input ref={fileRef} type="file" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }} />
-                <Button onClick={() => fileRef.current?.click()} disabled={uploading} className="w-full">
-                  {uploading ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Upload className="mr-2 size-4" />}
-                  Enviar anexo
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => fileRef.current?.click()} disabled={uploading} className="flex-1">
+                    {uploading ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Upload className="mr-2 size-4" />}
+                    Enviar anexo
+                  </Button>
+                  <Button asChild variant="outline">
+                    <a
+                      href={`/anexos?order_id=${order.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="mr-2 size-4" /> Comprovantes financeiros
+                    </a>
+                  </Button>
+                </div>
+
                 {query.data?.attachments.length ? (
                   <ul className="divide-y divide-border rounded-lg border border-border">
                     {query.data.attachments.map((a) => (

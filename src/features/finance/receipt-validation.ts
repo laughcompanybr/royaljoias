@@ -73,3 +73,58 @@ export function validateReceiptMetadata(
     );
   }
 }
+
+/**
+ * Map a MIME type to a canonical file extension. Falls back to the passed
+ * file name's extension when the mime is unknown/empty. Returns "bin" when
+ * neither is usable so callers still get a deterministic string.
+ */
+const MIME_TO_EXT: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "image/heic": "heic",
+  "application/pdf": "pdf",
+};
+
+export function normalizeReceiptExt(fileName: string, mime: string | null | undefined): string {
+  const m = (mime ?? "").toLowerCase().trim();
+  if (m && MIME_TO_EXT[m]) return MIME_TO_EXT[m];
+  const match = fileName.match(/\.([a-zA-Z0-9]{1,8})$/);
+  const ext = (match?.[1] ?? "").toLowerCase();
+  if (ext === "jpeg") return "jpg";
+  if (RECEIPT_ALLOWED_EXT.test(`.${ext}`)) return ext;
+  return "bin";
+}
+
+/**
+ * Client-side pre-upload validation. Mirrors the server-side checks so we
+ * fail fast before touching Supabase Storage.
+ */
+export function validateReceiptFile(file: { name: string; size: number; type: string }): void {
+  if (!file.size) {
+    throw new ReceiptValidationException("empty_file", `Arquivo vazio. ${RECEIPT_ALLOWED_DESCRIPTION}`);
+  }
+  if (file.size > RECEIPT_MAX_BYTES) {
+    throw new ReceiptValidationException(
+      "too_large",
+      `Arquivo excede 10MB (${(file.size / 1024 / 1024).toFixed(1)}MB). ${RECEIPT_ALLOWED_DESCRIPTION}`,
+    );
+  }
+  const type = (file.type ?? "").trim();
+  if (type) {
+    if (!RECEIPT_ALLOWED_MIME.test(type)) {
+      throw new ReceiptValidationException(
+        "invalid_mime",
+        `Tipo "${type}" não aceito. ${RECEIPT_ALLOWED_DESCRIPTION}`,
+      );
+    }
+  } else if (!RECEIPT_ALLOWED_EXT.test(file.name)) {
+    throw new ReceiptValidationException(
+      "invalid_extension",
+      `Extensão não aceita. ${RECEIPT_ALLOWED_DESCRIPTION}`,
+    );
+  }
+}

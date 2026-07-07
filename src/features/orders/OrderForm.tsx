@@ -112,6 +112,43 @@ export function OrderForm({ defaultValues, submitLabel = "Salvar", onSubmit, onC
   const margin = totalSale > 0 ? (netProfit / totalSale) * 100 : 0;
 
   const [cepLoading, setCepLoading] = useState(false);
+  const selectedClientId = String(useWatch({ control, name: "client_id" }) ?? "");
+  const selectedClient = (clientsQ.data ?? []).find((c) => c.id === selectedClientId) ?? null;
+  const clientHasAddress = !!(selectedClient && (selectedClient.zip || selectedClient.street || selectedClient.city));
+
+  // Decide the initial "custom address" state: true when editing an order whose
+  // ship_* differ from the client, or when there is no client address to pull from.
+  const [customShip, setCustomShip] = useState<boolean>(() => {
+    const c = defaultValues;
+    if (!c) return false;
+    const anyShip = !!(c.ship_zip || c.ship_street || c.ship_city);
+    return anyShip; // if editing, keep whatever was saved without overwriting
+  });
+
+  const applyClientAddress = (c: typeof selectedClient) => {
+    if (!c) return;
+    setValue("ship_zip", c.zip ?? "", { shouldDirty: true });
+    setValue("ship_street", c.street ?? "", { shouldDirty: true });
+    setValue("ship_number", c.number ?? "", { shouldDirty: true });
+    setValue("ship_complement", c.complement ?? "", { shouldDirty: true });
+    setValue("ship_district", c.district ?? "", { shouldDirty: true });
+    setValue("ship_city", c.city ?? "", { shouldDirty: true });
+    setValue("ship_state", c.state ?? "", { shouldDirty: true });
+    setValue("ship_reference", c.reference ?? "", { shouldDirty: true });
+  };
+
+  // Auto-fill ship_* from the client when: user selected a client, is NOT
+  // editing a different address, and the ship fields are still empty.
+  useEffect(() => {
+    if (!selectedClient || customShip) return;
+    const cur = getValues();
+    const hasShip = !!(cur.ship_zip || cur.ship_street || cur.ship_city);
+    if (hasShip) return;
+    applyClientAddress(selectedClient);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedClientId, customShip]);
+
+
   const [uploading, setUploading] = useState(false);
   // Card fee is entered as a % of the sale total; card_fee (BRL) is derived.
   const initialFeePct =
@@ -382,11 +419,65 @@ export function OrderForm({ defaultValues, submitLabel = "Salvar", onSubmit, onC
       </div>
 
       <div className="rounded-xl border border-border bg-muted/20 p-4">
-        <p className="mb-3 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          <MapPin className="size-3.5" /> Endereço de entrega
-        </p>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <MapPin className="size-3.5" /> Endereço de entrega
+          </p>
+          {selectedClient ? (
+            <div className="flex items-center gap-2">
+              {!customShip && clientHasAddress ? (
+                <span className="text-[11px] text-muted-foreground">
+                  Usando endereço de <strong className="text-foreground">{selectedClient.name}</strong>
+                </span>
+              ) : null}
+              <Button
+                type="button"
+                variant={customShip ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => {
+                  if (customShip) {
+                    // switch back to client address
+                    applyClientAddress(selectedClient);
+                    setCustomShip(false);
+                  } else {
+                    setCustomShip(true);
+                  }
+                }}
+                disabled={!clientHasAddress && !customShip}
+              >
+                {customShip ? "Usar endereço do cliente" : "Enviar para outro endereço"}
+              </Button>
+            </div>
+          ) : null}
+        </div>
+
+        {selectedClient && !customShip && clientHasAddress ? (
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/40 p-3 text-sm">
+            <p className="font-medium">{selectedClient.name}</p>
+            <p className="text-muted-foreground">
+              {[selectedClient.street, selectedClient.number].filter(Boolean).join(", ")}
+              {selectedClient.complement ? ` — ${selectedClient.complement}` : ""}
+            </p>
+            <p className="text-muted-foreground">
+              {[selectedClient.district, selectedClient.city, selectedClient.state]
+                .filter(Boolean)
+                .join(" · ")}
+              {selectedClient.zip ? ` · CEP ${selectedClient.zip}` : ""}
+            </p>
+            {/* keep hidden inputs so react-hook-form submits values */}
+            <input type="hidden" {...register("ship_zip")} />
+            <input type="hidden" {...register("ship_street")} />
+            <input type="hidden" {...register("ship_number")} />
+            <input type="hidden" {...register("ship_complement")} />
+            <input type="hidden" {...register("ship_district")} />
+            <input type="hidden" {...register("ship_city")} />
+            <input type="hidden" {...register("ship_state")} />
+            <input type="hidden" {...register("ship_reference")} />
+          </div>
+        ) : (
         <div className="grid gap-4 sm:grid-cols-6">
           <div className="space-y-1.5 sm:col-span-2">
+
             <Label htmlFor="ship_zip">CEP</Label>
             <div className="flex gap-2">
               <Input id="ship_zip" placeholder="00000-000" inputMode="numeric" {...register("ship_zip")} onBlur={lookupShipCep} />
@@ -427,7 +518,9 @@ export function OrderForm({ defaultValues, submitLabel = "Salvar", onSubmit, onC
             <Input id="ship_reference" {...register("ship_reference")} />
           </div>
         </div>
+        )}
       </div>
+
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">

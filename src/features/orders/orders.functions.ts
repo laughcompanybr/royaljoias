@@ -358,7 +358,7 @@ export const listClientOptions = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("clients")
-      .select("id, name")
+      .select("id, name, zip, street, number, complement, district, reference, city, state")
       .is("deleted_at", null)
       .order("name")
       .limit(500);

@@ -101,7 +101,7 @@ import {
   type ExpenseInput,
   type FinancialTxInput,
 } from "@/features/finance/schemas";
-import { CheckCircle2, ArrowRightLeft } from "lucide-react";
+import { CheckCircle2, ArrowRightLeft, ExternalLink } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ReceiptField, getReceiptUrl } from "@/features/finance/ReceiptField";
 import { GoalsPanel } from "@/features/finance/GoalsPanel";
@@ -725,7 +725,7 @@ function ExpensesTab({
                   <TableCell className="font-medium">{e.description ?? "—"}</TableCell>
                   <TableCell><Badge variant="secondary">{e.category ?? "Outros"}</Badge></TableCell>
                   <TableCell className="text-right font-semibold text-destructive">- {formatBRL(e.amount)}</TableCell>
-                  <TableCell className="text-center"><ReceiptLink path={e.receipt_url} /></TableCell>
+                  <TableCell className="text-center"><ReceiptLink path={e.receipt_url} source="expense" id={e.id} /></TableCell>
                   <TableCell>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
@@ -1019,7 +1019,7 @@ function MovementsTab({ from, to }: { from: string; to: string }) {
                     {t.direction === "in" ? "+" : "-"} {formatBRL(t.amount)}
                   </TableCell>
                   <TableCell className="text-center">
-                    <ReceiptLink path={t.receipt_url} />
+                    <ReceiptLink path={t.receipt_url} source="transaction" id={t.id} />
                   </TableCell>
                   <TableCell className="flex items-center justify-end gap-1">
                     {t.status !== "paid" && t.status !== "cancelled" ? (
@@ -1564,7 +1564,7 @@ function PayableHistoryDialog({
                       - {formatBRL(p.amount)}
                     </TableCell>
                     <TableCell className="text-right">
-                      <ReceiptLink path={p.receipt_url} />
+                      <ReceiptLink path={p.receipt_url} source="payment" id={p.id} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -1590,13 +1590,21 @@ function PayableHistoryDialog({
 }
 
 
-function ReceiptLink({ path }: { path: string | null | undefined }) {
+function ReceiptLink({
+  path,
+  source,
+  id,
+}: {
+  path: string | null | undefined;
+  source?: "expense" | "transaction" | "payment";
+  id?: string;
+}) {
   const [loading, setLoading] = useState(false);
   if (!path) return <span className="text-xs text-muted-foreground">—</span>;
   async function open() {
     setLoading(true);
     try {
-      const url = await getReceiptUrl(path);
+      const url = await getReceiptUrl(path!);
       if (url) window.open(url, "_blank", "noopener,noreferrer");
       else toast.error("Não foi possível abrir o comprovante");
     } finally {
@@ -1604,9 +1612,18 @@ function ReceiptLink({ path }: { path: string | null | undefined }) {
     }
   }
   return (
-    <Button size="icon" variant="ghost" className="h-7 w-7" onClick={open} disabled={loading} title="Ver comprovante">
-      <Eye className="h-3.5 w-3.5" />
-    </Button>
+    <div className="inline-flex items-center gap-0.5">
+      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={open} disabled={loading} title="Ver comprovante">
+        <Eye className="h-3.5 w-3.5" />
+      </Button>
+      {source && id ? (
+        <Button asChild size="icon" variant="ghost" className="h-7 w-7" title="Abrir na tela de anexos">
+          <a href={`/anexos?ref_source=${source}&ref_id=${id}`} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </Button>
+      ) : null}
+    </div>
   );
 }
 
