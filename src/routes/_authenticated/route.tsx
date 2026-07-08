@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/layout/AppShell";
-import { ArkanoLogo } from "@/components/brand/ArkanoLogo";
+import { RoyalLogo } from "@/components/brand/RoyalLogo";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthPending() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background">
-      <ArkanoLogo size={40} showWordmark />
+      <RoyalLogo size={40} showWordmark />
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Loader2 className="size-4 animate-spin text-gold" />
         Verificando sessão…

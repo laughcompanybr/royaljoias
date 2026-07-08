@@ -39,7 +39,7 @@ test.describe("Authorship footer — AppShell", () => {
       await page.goto(route);
       const footer = page.locator("footer").filter({ hasText: /Developed by Laugh Company/i });
       await expect(footer).toBeVisible();
-      await expect(footer).toContainText(/Arkano Club/i);
+      await expect(footer).toContainText(/Royal Joias/i);
     });
   }
 });

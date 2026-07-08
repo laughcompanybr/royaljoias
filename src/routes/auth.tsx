@@ -40,7 +40,7 @@ function AuthPage() {
       tagline={
         mode === "forgot"
           ? "Enviaremos um link seguro para seu e-mail para redefinir sua senha em segundos."
-          : "Bem-vindo de volta ao painel executivo Arkano Club. Sua operação, com sofisticação."
+          : "Bem-vindo de volta ao painel executivo Royal Joias. Sua operação, com sofisticação."
       }
     >
       <div className="bento-tile p-7 sm:p-8">

@@ -282,7 +282,7 @@ function ThemeSection() {
 }
 
 /* ------------------ PREFERÊNCIAS ------------------ */
-const PREFS_KEY = "arkano-preferences";
+const PREFS_KEY = "royal-preferences";
 type Prefs = {
   emailNotifications: boolean;
   desktopNotifications: boolean;
@@ -397,7 +397,7 @@ function BackupSection() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `arkano_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `royal_backup_${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success("Backup gerado", {

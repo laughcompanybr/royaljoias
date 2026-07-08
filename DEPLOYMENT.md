@@ -1,4 +1,4 @@
-# Deploy — Arkano Club
+# Deploy — Royal Joias
 
 Guia de deploy do projeto em ambiente próprio (Vercel), incluindo migração
 do banco Supabase.

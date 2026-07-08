@@ -178,7 +178,7 @@ END $$;
 -- 8. SEED DEFAULT SETTINGS
 -- =========================================================================
 INSERT INTO public.app_settings(key, value, description) VALUES
-  ('company', '{"name":"Arkano Club","currency":"BRL","timezone":"America/Sao_Paulo"}'::jsonb, 'Dados da empresa'),
+  ('company', '{"name":"Royal Joias","currency":"BRL","timezone":"America/Sao_Paulo"}'::jsonb, 'Dados da empresa'),
   ('order_statuses', '["novo","em_producao","aguardando_pagamento","enviado","concluido","cancelado"]'::jsonb, 'Status disponíveis para pedidos'),
   ('notifications', '{"email":true,"whatsapp":false}'::jsonb, 'Preferências de notificação')
 ON CONFLICT (key) DO NOTHING;

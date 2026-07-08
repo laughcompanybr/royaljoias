@@ -17,7 +17,7 @@ async function fakeAuthenticated(page: import("@playwright/test").Page) {
       currentSession: {
         access_token: "e2e-token",
         token_type: "bearer",
-        user: { id: "e2e-user", email: "e2e@arkano.test" },
+        user: { id: "e2e-user", email: "e2e@royal.test" },
         expires_at: Math.floor(Date.now() / 1000) + 3600,
       },
       expiresAt: Math.floor(Date.now() / 1000) + 3600,

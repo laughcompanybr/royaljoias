@@ -13,11 +13,11 @@ export const Route = createFileRoute("/access-denied")({
   component: AccessDeniedPage,
   head: () => ({
     meta: [
-      { title: "Acesso restrito — Arkano Club" },
+      { title: "Acesso restrito — Royal Joias" },
       {
         name: "description",
         content:
-          "Sua conta não tem permissão para acessar este recurso do Arkano Club.",
+          "Sua conta não tem permissão para acessar este recurso do Royal Joias.",
       },
       { name: "robots", content: "noindex,nofollow" },
     ],

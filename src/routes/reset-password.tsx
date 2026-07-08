@@ -55,7 +55,7 @@ function ResetPasswordPage() {
       eyebrow="Segurança"
       title="Uma nova chave para"
       highlight="seu tempo."
-      tagline="Escolha uma senha forte e única. Ela protege o acesso ao painel executivo Arkano Club."
+      tagline="Escolha uma senha forte e única. Ela protege o acesso ao painel executivo Royal Joias."
     >
       <div className="bento-tile p-7 sm:p-8">
         <div className="mb-6">

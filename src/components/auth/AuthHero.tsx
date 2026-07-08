@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArkanoLogo } from "@/components/brand/ArkanoLogo";
+import { RoyalLogo } from "@/components/brand/RoyalLogo";
 
 interface AuthHeroProps {
   eyebrow: string;
@@ -51,7 +51,7 @@ export function AuthHero({ eyebrow, title, highlight, tagline, children }: AuthH
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <ArkanoLogo size={44} />
+            <RoyalLogo size={44} />
           </motion.div>
 
           <div className="max-w-xl">
@@ -93,7 +93,7 @@ export function AuthHero({ eyebrow, title, highlight, tagline, children }: AuthH
             transition={{ duration: 0.6, delay: 0.6 }}
             className="flex items-center justify-between text-[10px] uppercase tracking-[0.3em] text-muted-foreground"
           >
-            <span>Arkano Club · {new Date().getFullYear()}</span>
+            <span>Royal Joias · {new Date().getFullYear()}</span>
             <span className="hidden items-center gap-2 xl:flex">
               <span className="size-1.5 rounded-full bg-gold" />
               Painel executivo
@@ -110,7 +110,7 @@ export function AuthHero({ eyebrow, title, highlight, tagline, children }: AuthH
             transition={{ duration: 0.5 }}
             className="mb-8 flex flex-col items-center gap-4 text-center lg:hidden"
           >
-            <ArkanoLogo size={44} />
+            <RoyalLogo size={44} />
             <h1 className="font-display text-3xl leading-tight">
               {title}
               {highlight ? <span className="ml-2 text-gold-shine">{highlight}</span> : null}
