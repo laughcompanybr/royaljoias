@@ -187,7 +187,7 @@ function PedidosPage() {
               id="search"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Nº do pedido, teor/material, modelo, rastreio..."
+              placeholder="Nº do pedido, marca, modelo, rastreio..."
               className="pl-9"
             />
           </div>

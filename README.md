@@ -1,4 +1,4 @@
-## Royal Joias
+# Royal Joias
 
 Painel executivo proprietário — gestão de pedidos, clientes, financeiro e operações.
 
@@ -42,4 +42,3 @@ Variáveis de ambiente necessárias estão documentadas em
 ---
 
 © Laugh. Todos os direitos reservados.
-"# royaljoias"  

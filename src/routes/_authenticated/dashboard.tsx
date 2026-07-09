@@ -289,7 +289,7 @@ function DashboardContent() {
         <div className="grid grid-cols-2 gap-3 lg:col-span-2 lg:grid-cols-1">
           <MiniKpi label="Clientes" value={formatNumber(data.clientsTotal)} icon={Users} />
           <MiniKpi label="Pedidos · mês" value={formatNumber(data.ordersMonth)} icon={Package} />
-          <MiniKpi label="Joias · mês" value={formatNumber(data.watchesSoldMonth)} icon={Package} />
+          <MiniKpi label="Relógios · mês" value={formatNumber(data.watchesSoldMonth)} icon={Package} />
           <MiniKpi label="Ticket médio" value={formatBRL(data.avgTicket)} icon={Sparkles} />
           <MiniKpi label="Lucro médio" value={formatBRL(data.avgProfit)} icon={CircleDollarSign} />
         </div>
@@ -373,7 +373,7 @@ function TopProducts({ items, className }: { items: DashboardStats["topProducts"
         <EmptyState
           icon={Package}
           title="Sem vendas no mês"
-          description="As Joias mais vendidos aparecerão aqui."
+          description="Os relógios mais vendidos aparecerão aqui."
         />
       ) : (
         <ul className="mt-4 space-y-2">

@@ -247,9 +247,9 @@ export function OrderForm({ defaultValues, submitLabel = "Salvar", onSubmit, onC
           </select>
           {err("supplier_id")}
         </div>
-        <div className="space-y-1.5"><Label htmlFor="brand">Teor/Material</Label><Input id="brand" {...register("brand")} />{err("brand")}</div>
+        <div className="space-y-1.5"><Label htmlFor="brand">Marca</Label><Input id="brand" {...register("brand")} />{err("brand")}</div>
         <div className="space-y-1.5"><Label htmlFor="model">Modelo</Label><Input id="model" {...register("model")} />{err("model")}</div>
-        <div className="space-y-1.5"><Label htmlFor="reference">Peso</Label><Input id="reference" {...register("reference")} />{err("reference")}</div>
+        <div className="space-y-1.5"><Label htmlFor="reference">Referência</Label><Input id="reference" {...register("reference")} />{err("reference")}</div>
         <div className="space-y-1.5">
           <Label htmlFor="quantity">Quantidade</Label>
           <Input id="quantity" type="number" min="1" step="1" {...register("quantity")} />
@@ -265,7 +265,7 @@ export function OrderForm({ defaultValues, submitLabel = "Salvar", onSubmit, onC
 
       <div className="rounded-xl border border-border bg-muted/20 p-4">
         <p className="mb-3 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          <ImageIcon className="size-3.5" /> Foto da Joia
+          <ImageIcon className="size-3.5" /> Foto do relógio
         </p>
         <div className="flex items-center gap-4">
           <div className="size-24 shrink-0 overflow-hidden rounded-lg border border-border bg-muted/40">

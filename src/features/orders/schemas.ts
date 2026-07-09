@@ -21,7 +21,7 @@ export const STATUS_LABEL: Record<OrderStatus, string> = {
   awaiting_deposit: "Aguardando pagamento",
   partial_payment: "Pagamento parcial",
   paid: "Pago",
-  purchasing: "Em produção",
+  purchasing: "Em compra",
   separating: "Separando pedido",
   in_transit: "Em trânsito",
   shipped: "Enviado",

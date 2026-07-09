@@ -284,7 +284,7 @@ export function ClientDetailSheet({ clientId, open, onOpenChange }: Props) {
                     const photo = query.data?.orderPhotos?.[o.id];
                     const label = STATUS_LABEL[o.status as OrderStatus] ?? o.status;
                     const tone = STATUS_TONE[o.status as OrderStatus] ?? "";
-                    const desc = [o.brand, o.model].filter(Boolean).join(" ") || "Joia";
+                    const desc = [o.brand, o.model].filter(Boolean).join(" ") || "Relógio";
                     return (
                       <li key={o.id} className="flex items-center gap-3 p-3 text-sm">
                         <div className="size-14 shrink-0 overflow-hidden rounded-lg border border-border bg-muted/30">

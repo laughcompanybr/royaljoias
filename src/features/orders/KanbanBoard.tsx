@@ -140,7 +140,7 @@ export function KanbanBoard() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar pedido, cliente, modelo…"
+          placeholder="Buscar pedido, cliente, marca…"
           className="pl-9"
         />
       </div>

@@ -41,14 +41,14 @@ export function AppSidebar() {
                 href="https://www.instagram.com/royaljoiasmg?igsh=aHN3N3hwb2ZqdTFs"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Visitar o instagram oficial da Royal Joias"
+                aria-label="Visitar instagram oficial da Royal Joias"
                 className="inline-flex rounded-md outline-none transition-all duration-200 hover:opacity-80 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar cursor-pointer"
               >
                 <RoyalLogo size={32} showWordmark={!collapsed} />
               </a>
             </TooltipTrigger>
             <TooltipContent side="right" className="hidden md:block">
-              Visitar site instagram da Royal Joias
+              Visitar instagram da Royal Joias
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

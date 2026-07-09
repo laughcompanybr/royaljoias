@@ -289,16 +289,16 @@ export function OrderDetailSheet({ orderId, open, onOpenChange }: Props) {
 
                     {query.data?.photoUrl ? (
                       <div className="overflow-hidden rounded-xl border border-border bg-muted/30">
-                        <img src={query.data.photoUrl} alt={order.model ?? "Joia"} className="max-h-72 w-full object-contain" />
+                        <img src={query.data.photoUrl} alt={order.model ?? "Relógio"} className="max-h-72 w-full object-contain" />
                       </div>
                     ) : null}
 
                     <dl className="grid grid-cols-2 gap-4 text-sm">
                       <Info label="Cliente" value={client?.name} />
                       <Info label="Fornecedor" value={supplier?.name} />
-                      <Info label="Teor/Material" value={order.brand} />
+                      <Info label="Marca" value={order.brand} />
                       <Info label="Modelo" value={order.model} />
-                      <Info label="Peso" value={order.reference} />
+                      <Info label="Referência" value={order.reference} />
                       <Info label="Quantidade" value={String(order.quantity ?? 1)} />
                       <Info label="Forma de pagamento" value={order.payment_method} />
                       <Info label="Data da compra" value={formatDate(order.purchase_date)} />
