@@ -138,7 +138,7 @@ function ReportsPage() {
           Status: STATUS_LABEL[o.status as OrderStatus] ?? o.status,
           Cliente: o.client,
           Fornecedor: o.supplier,
-          Teor e Material: o.brand,
+          Teor: o.brand,
           Modelo: o.model,
           Referência: o.reference,
           Venda: o.sale_price,
