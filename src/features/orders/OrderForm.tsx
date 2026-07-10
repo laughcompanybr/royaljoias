@@ -247,9 +247,9 @@ export function OrderForm({ defaultValues, submitLabel = "Salvar", onSubmit, onC
           </select>
           {err("supplier_id")}
         </div>
-        <div className="space-y-1.5"><Label htmlFor="brand">Marca</Label><Input id="brand" {...register("brand")} />{err("brand")}</div>
+        <div className="space-y-1.5"><Label htmlFor="brand">Teor/Material</Label><Input id="brand" {...register("brand")} />{err("brand")}</div>
         <div className="space-y-1.5"><Label htmlFor="model">Modelo</Label><Input id="model" {...register("model")} />{err("model")}</div>
-        <div className="space-y-1.5"><Label htmlFor="reference">Referência</Label><Input id="reference" {...register("reference")} />{err("reference")}</div>
+        <div className="space-y-1.5"><Label htmlFor="reference">Peso</Label><Input id="reference" {...register("reference")} />{err("reference")}</div>
         <div className="space-y-1.5">
           <Label htmlFor="quantity">Quantidade</Label>
           <Input id="quantity" type="number" min="1" step="1" {...register("quantity")} />
