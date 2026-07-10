@@ -692,7 +692,6 @@ export type Database = {
       }
       order_items: {
         Row: {
-          company_id: string
           created_at: string
           id: string
           name_snapshot: string
@@ -705,7 +704,6 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          company_id?: string
           created_at?: string
           id?: string
           name_snapshot: string
@@ -718,7 +716,6 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          company_id?: string
           created_at?: string
           id?: string
           name_snapshot?: string
@@ -731,13 +728,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "order_items_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "order_items_order_id_fkey"
             columns: ["order_id"]
@@ -982,25 +972,9 @@ export type Database = {
           },
         ]
       }
-      platform_admins: {
-        Row: {
-          created_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       product_movements: {
         Row: {
           actor: string | null
-          company_id: string
           created_at: string
           id: string
           order_id: string | null
@@ -1012,7 +986,6 @@ export type Database = {
         }
         Insert: {
           actor?: string | null
-          company_id?: string
           created_at?: string
           id?: string
           order_id?: string | null
@@ -1024,7 +997,6 @@ export type Database = {
         }
         Update: {
           actor?: string | null
-          company_id?: string
           created_at?: string
           id?: string
           order_id?: string | null
@@ -1035,13 +1007,6 @@ export type Database = {
           type?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "product_movements_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "product_movements_order_id_fkey"
             columns: ["order_id"]
@@ -1061,7 +1026,6 @@ export type Database = {
       products: {
         Row: {
           category: string | null
-          company_id: string
           cost_price: number
           created_at: string
           created_by: string | null
@@ -1080,7 +1044,6 @@ export type Database = {
         }
         Insert: {
           category?: string | null
-          company_id?: string
           cost_price?: number
           created_at?: string
           created_by?: string | null
@@ -1099,7 +1062,6 @@ export type Database = {
         }
         Update: {
           category?: string | null
-          company_id?: string
           cost_price?: number
           created_at?: string
           created_by?: string | null
@@ -1116,15 +1078,7 @@ export type Database = {
           stock_qty?: number
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "products_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -1248,7 +1202,6 @@ export type Database = {
         Returns: number
       }
       apply_order_stock_out: { Args: { _order_id: string }; Returns: undefined }
-      default_company_for_user: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

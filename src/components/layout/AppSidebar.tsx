@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { RoyalLogo } from "@/components/brand/RoyalLogo";
+import { RoyalJoias } from "@/components/brand/RoyalJoias";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { NAV_ITEMS, type NavItem } from "./nav-config";
 
@@ -44,7 +44,7 @@ export function AppSidebar() {
                 aria-label="Visitar instagram oficial da Royal Joias"
                 className="inline-flex rounded-md outline-none transition-all duration-200 hover:opacity-80 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar cursor-pointer"
               >
-                <RoyalLogo size={32} showWordmark={!collapsed} />
+                <RoyalJoias size={32} showWordmark={!collapsed} />
               </a>
             </TooltipTrigger>
             <TooltipContent side="right" className="hidden md:block">

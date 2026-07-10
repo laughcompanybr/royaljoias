@@ -1,13 +1,13 @@
 import logo from "@/assets/royal-logo.jpg";
 import { cn } from "@/lib/utils";
 
-interface RoyalLogoProps {
+interface RoyalJoiasProps {
   size?: number;
   className?: string;
   showWordmark?: boolean;
 }
 
-export function RoyalLogo({ size = 36, className, showWordmark = true }: RoyalLogoProps) {
+export function RoyalJoias({ size = 36, className, showWordmark = true }: RoyalJoiasProps) {
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <img
